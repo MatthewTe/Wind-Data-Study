@@ -42,7 +42,7 @@ class Wind (object):
 
     # Creating a function that consumes the int num_rows which row in the data frame the function will draw variables
     # from. The function then uses the values in the selected column as input for the self.calc() function to calculate
-    # power output of a wind turbine. (It is assumed that the selected column contains wind speed variables:
+    # power output of a wind turbine. (It is assumed that the selected column contains wind speed variables):
     def compile(self, num_rows):
         self.num_rows = num_rows
         # declaring a data frame as our previous data frame used in the self.clean() function:
