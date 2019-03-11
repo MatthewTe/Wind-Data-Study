@@ -36,15 +36,16 @@ class Wind (object):
         df_clean = df.drop(["Sec", "WindDir_deg", "WindDirSTD_deg", "1-secGust_m/s", "3-secGust_m/s",
                             "AtmPr_mb", "AirTemp_°C", "Humidity_%"], axis=1)
         df_clean = df_clean.drop([0], axis=0)
+        # Formatting the data frame into a .datetime component:
+        df_clean = df_clean.rename(columns={"Min": "Minute"})
+        df_clean["datetime"] = pd.to_datetime(df_clean[['Day', "Month", "Year", "Hour", "Minute"]])
         # searching the data frame for all values that contain the error values of "#NUM!" and removing them:
         df_clean = df_clean[df_clean.iloc[:, 5] != "#NUM!"]
         # declaring the variable self.df_clean for use in the next function:
         self.df_clean = df_clean
         return df_clean
 
-    # Creating a function that consumes the int num_rows which row in the data frame the function will draw variables
-    # from. The function then uses the values in the selected column as input for the self.calc() function to calculate
-    # power output of a wind turbine. (It is assumed that the selected column contains wind speed variables):
+    # Add a description for the compile function:
     def compile(self):
         # declaring a data frame as our previous data frame used in the self.clean() function:
         df = self.df_clean
@@ -53,14 +54,17 @@ class Wind (object):
         df["Month"] = df["Month"].astype(int)
         df["Year"] = df["Year"].astype(int)
         df["Hour"] = df["Hour"].astype(int)
-        df["Min"] = df["Min"].astype(int)
+        df["Minute"] = df["Minute"].astype(int)
         df["WindSpd_m/s"] = df["WindSpd_m/s"].astype(float)
         # Creating a separate column that contains the calculated wind power values based on the the [WindSpd_m/s]:
         df_append = (self.calc(df["WindSpd_m/s"]))
         # Adding this new column to the existing data frame df:
         df["Power_Output/MWt"] = df_append.values
-        self.csv = df
-        return df
+        # Creating a new, more condensed data frame the contains only the valuable data for visualization,
+        # ["datetime"], ["WindSpd_m/s"] and ["Power_Output/MWt"]
+        df_calc = df[["datetime", "WindSpd_m/s", "Power_Output/MWt"]]
+        self.csv = df_calc
+        return df_calc
 
     # Creating a simple function that writes the now cleaned and compiled data frame to a .csv:
     def output(self, f_name):
@@ -71,7 +75,7 @@ class Wind (object):
 
 # Executing the class Wind:
 Frame = Wind(1.23, 52, 0.4)
-(Frame.clean("Cassia_Wind_Data.csv"))
+(Frame.clean("Cassia_Wind_Data_Dirty.csv"))
 print(Frame.compile())
 Frame.output("Cassia_Compiled_Wind_Data.csv")
 
