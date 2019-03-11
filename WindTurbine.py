@@ -1,7 +1,6 @@
 # Importing packages:
 import math as m
 import pandas as pd
-import numpy as np
 
 
 # Creating a class to store the necessary variables as well as the functions used to calculate wind power and re-write
@@ -67,10 +66,12 @@ class Wind (object):
     def output(self, f_name):
         df = self.csv
         self.f_name = f_name
-        df.to_csv(encoding='utf-8', index=False)
+        df.to_csv(self.f_name)
 
 
+# Executing the class Wind:
 Frame = Wind(1.23, 52, 0.4)
-(Frame.clean("Test_Wind_Data.csv"))
+(Frame.clean("Cassia_Wind_Data.csv"))
 print(Frame.compile())
+Frame.output("Cassia_Compiled_Wind_Data.csv")
 
