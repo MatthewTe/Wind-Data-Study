@@ -66,7 +66,7 @@ class Wind (object):
     def output(self, f_name):
         df = self.csv
         self.f_name = f_name
-        df.to_csv(self.f_name)
+        df.to_csv(self.f_name, index=False)
 
 
 # Executing the class Wind:
